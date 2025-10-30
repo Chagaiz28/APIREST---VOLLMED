@@ -7,7 +7,7 @@ public class ValidacaoMedicoInativo {
 
     private MedicoRepository medicoRepository;
 
-    public voidvalidar(DadosAgendamentoConsulta dados){
+    public void validar(DadosAgendamentoConsulta dados){
         if(dados.idMedico() == null){
             return;
         }
