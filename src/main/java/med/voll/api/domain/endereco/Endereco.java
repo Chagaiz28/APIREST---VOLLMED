@@ -8,13 +8,22 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Endereco {
     private String logradouro;
     private String bairro;
     private String cep;
     private String numero;
     private String cidade;
+
+    public Endereco(String logradouro, String bairro, String cep, String numero, String cidade, String uf) {
+        this.logradouro = logradouro;
+        this.bairro = bairro;
+        this.cep = cep;
+        this.numero = numero;
+        this.cidade = cidade;
+        this.uf = uf;
+    }
+
     private String uf;
 
     public Endereco(DadosEndereco endereco) {

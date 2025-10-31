@@ -2,15 +2,14 @@ package med.voll.api.domain.consulta;
 
 import jakarta.validation.Valid;
 import med.voll.api.domain.ValidacaoException;
-import med.voll.api.domain.consulta.validacoes.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.agendar.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.cancelar.ValidadorCancelamentoConsulta;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
-import med.voll.api.domain.paciente.Paciente;
 import med.voll.api.domain.paciente.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +23,8 @@ public class AgendadeConsultas {
     private PacienteRepository pacienteRepository;
     @Autowired
     List<ValidadorAgendamentoDeConsulta> validadores;
+    @Autowired
+    List<ValidadorCancelamentoConsulta> validaCancelamento;
 
     public DadosDetalhamentoConsulta agendar(DadosAgendamentoConsulta dados){
 
@@ -49,10 +50,7 @@ public class AgendadeConsultas {
     public void cancelar(@Valid DadosCancelamentoConsulta dados) {
         Consulta consulta = consultaRepository.getReferenceById(dados.idConsulta());
         MotivoCancelamento motivo = dados.motivo();
-        LocalDateTime dataDaConsulta = consulta.getData();
-        if(dataDaConsulta.isBefore(LocalDateTime.now().plusHours(24))){
-            throw new ValidacaoException("Consulta só pode ser cancelada com mais de 24h de antecedência");
-        }
+        validaCancelamento.forEach(v->v.validar(dados));
         consulta.cancelar(motivo);
     }
 
